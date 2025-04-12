@@ -2,12 +2,14 @@ import Queue as Q
 import time
 import Humen
 import numpy as np  # Has possion distribution function => np.random.poisson(lambda)
-import sqlite3 as sql
+import sqlite3 as sql  # For database operations
 import pandas as pd
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt   #plotting
 import seaborn as sns
 from collections import defaultdict
-import os 
+import os
+
+   # Initialize the database
 path = "./data.db"
 if os.path.exists(path):
     os.remove(path)
@@ -17,13 +19,14 @@ con = sql.connect(path)
 c = con.cursor()
 
 con.commit()
+
 start = time.time()
 lambda_value_arrive = 5  # 5 patients per sec (patient/sec)
 lambda_value_service = 3  # 3 patients per sec (patient/sec)
 set_interval_arrive = 10  # at each 10 secs number of people will come
 set_interval_service = 20  # at each 20 secs number of people will leave
 
-customers = []
+customers = []   # Track serviced customers for data analysis
 
 # keep tracking of next intervals
 next_time_arrive = int(time.time() - start) + set_interval_arrive
@@ -43,13 +46,13 @@ total_serviced_people_priority = 0
 total_serviced_time_priority = 0
 print("############################# Hospital queue Started ! ##############################\n")
 
-while current_interval <= 300: # 1 mins
+
+ # run for 300 seconds  (the more time ,the more accuracy)
+while current_interval <= 300:  # 5 mins
     # NORMAL QUEUE (FIRST SYSTEM)
     current_interval = int(time.time() - start)
     condition_of_dequeue = current_interval == next_time_service
     condition_of_enqueue = current_interval == next_time_arrive
-    
-
 
     if condition_of_dequeue:
         next_time_service += set_interval_service
@@ -62,7 +65,7 @@ while current_interval <= 300: # 1 mins
                     human = q.head
                     total_serviced_people_normal += 1
                     service_time = current_interval - human.arrival_time
-                    total_serviced_time_normal += service_time 
+                    total_serviced_time_normal += service_time
                     customers.append({
                         "queue_type": "Normal",
                         "criticality": human.criticality,
@@ -70,10 +73,8 @@ while current_interval <= 300: # 1 mins
                         "end_time": current_interval
                     })
                     q.dequeue()
-                  # Print the current state of the queue after dequeueing
-        
-        
-
+                # Print the current state of the queue after dequeueing
+         ## Loop over all PRIORITY QUEUES
         for queue in all_priority_queues:
             number_of_people_leaving = np.random.poisson(lambda_value_service)
             for _ in range(number_of_people_leaving):
@@ -83,14 +84,14 @@ while current_interval <= 300: # 1 mins
                     total_serviced_people_priority += 1
                     total_serviced_time_priority += service_time
                     customers.append({
-                        "queue_type" : "Priority",
+                        "queue_type": "Priority",
                         "criticality": human.criticality,
                         "start_time": human.arrival_time,
                         "end_time": current_interval
                     })
                     queue.dequeue()
-            
-        
+
+        # Print queue states after dequeuing
         print("AFTER DEQUEUE OF NORMAL : ")
         for q in normal_queues:
             q.printing()
@@ -98,16 +99,16 @@ while current_interval <= 300: # 1 mins
         for queue in all_priority_queues:
             queue.printing()
 
-            # condition of arrival of people at (10 s) of NORMAL QUEUE
+            # condition of arrival of people at (10 s) of NORMAL QUEUE  "enqueue"
     if condition_of_enqueue:
-        
+
         next_time_arrive += set_interval_arrive
 
         # NORMAL QUEUE (FIRST SYSTEM)
-        num_coming_patients = np.random.poisson(lambda_value_arrive)  
+        num_coming_patients = np.random.poisson(lambda_value_arrive)
         counting = num_coming_patients
         if num_coming_patients > 0:
-            
+
             # determine number of critical and number of normal people
             number_of_normal = np.random.randint(0, num_coming_patients + 1)
             number_of_critical = num_coming_patients - number_of_normal
@@ -115,6 +116,7 @@ while current_interval <= 300: # 1 mins
                 current = 1
                 human = None
                 num = np.random.random()
+                # Random patient type 25% for each type
                 if num >= 0 and num < .25:
                     human = Humen.Oldman()
                 elif num >= .25 and num < .5:
@@ -135,19 +137,16 @@ while current_interval <= 300: # 1 mins
                             new.enqueue(human)
                             break
                     current += 1
-                        
 
                 human.set_arrival_time(current_interval)
-                
+                # Print the queue after adding patients  "enqueue"
                 print("ENQUEUE OF NORMAL : ")
                 for q in normal_queues:
                     q.printing()
                 print("\n####\n")
 
-
-
         # PRIORITY QUEUE (SECOND SYSTEM)
-        num_coming_patients = np.random.poisson(lambda_value_arrive)  
+        num_coming_patients = np.random.poisson(lambda_value_arrive)
         remaining_people = num_coming_patients
         patient = None
         count = 1
@@ -155,7 +154,7 @@ while current_interval <= 300: # 1 mins
         while remaining_people > 0:
             current = 1
             num = np.random.random()
-            
+
             if num >= 0 and num < .25:
                 patient = Humen.Oldman()
             elif num >= .25 and num < .5:
@@ -165,30 +164,28 @@ while current_interval <= 300: # 1 mins
             else:
                 patient = Humen.Normal_person()
 
+            # Find the priority queue with minimum length
             for q in all_priority_queues:
-                    if not q.full():
-                        q.insert(patient)
+                if not q.full():
+                    q.insert(patient)
+                    break
+                else:
+                    if current == len(all_priority_queues):
+                        new = Q.Queue()
+                        all_priority_queues.append(new)
+                        new.insert(patient)
                         break
-                    else:
-                        if current == len(all_priority_queues):
-                            new = Q.Queue()
-                            all_priority_queues.append(new)
-                            new.insert(patient)
-                            break
-                    current += 1
-
-
+                current += 1
 
             patient.set_arrival_time(current_interval)
             remaining_people -= 1
 
-                # Print the state of the priority queue after adding each patient
+            # Print the state of the priority queue after adding each patient
 
             print("ENQUEUE OF PRIORITY : ")
             for q in all_priority_queues:
-                    q.printing()
-            print("\n****\n")# Print the state of the priority queue after adding each patient
-
+                q.printing()
+            print("\n****\n")  # Print the state of the priority queue after adding each patient
 
     if condition_of_dequeue:
         if total_serviced_people_normal > 0 and total_serviced_people_priority > 0:
@@ -196,7 +193,7 @@ while current_interval <= 300: # 1 mins
             print(f"average time Normal : {avg_normal}s , total people : {total_serviced_people_normal}")
             avg_priority = total_serviced_time_priority / total_serviced_people_priority
             print(f"average time priority : {avg_priority}s , total people : {total_serviced_people_priority}")
-    
+
     if condition_of_enqueue or condition_of_dequeue:
         print(
             f"################################# {current_interval} seconds have passed !! ###################################")
