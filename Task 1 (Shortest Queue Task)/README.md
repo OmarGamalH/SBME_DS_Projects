@@ -43,6 +43,13 @@ It allows performance comparisons between the two systems under stochastic arriv
 - Every **10 seconds**, a new group of patients arrives.
 - Every **20 seconds**, patients are serviced and leave the system.
 
+
+### Randomness 
+- Number of people served and leaving the Queue depends on the **Poisson Distribution**.
+- There is pre-defined value for the lambda that will be used in the **Poisson distribution** to calculate the random number of people leaving and added to the Queue
+
+
+
 ###  Patient Generation
 - The number of patients is determined using **poisson distribution**
 - Each Queue has it's own Random number of patient to mimic the real life world.
