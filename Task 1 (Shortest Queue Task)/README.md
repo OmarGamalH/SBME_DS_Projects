@@ -45,9 +45,9 @@ It allows performance comparisons between the two systems under stochastic arriv
 
 ###  Patient Generation
 - The number of patients is determined using **poisson distribution**
-- Each Queue has different of each type has it's own Random number of patient to mimic the real life world
+- Each Queue has it's own Random number of patient to mimic the real life world.
 
-- Patients are randomly assigned one of four types:
+- Patients are randomly assigned one of four types **(different criticality levels in the System)**:
   - **Old Man**: Very Sick (priority level 3)
   - **Sick Person**: Sick (priority level 2)
   - **Pregnant Woman**: Very Very Sick (priority level 4)
@@ -58,7 +58,8 @@ It allows performance comparisons between the two systems under stochastic arriv
   - **Priority Queues** (inserted based on criticality) which will insert the patients based on their criticality level. 
 
 ### Patient Processing
-- Each queue can hold up to **5 patients** before a new queue is created.
+- Each queue can hold up to **5 patients**
+- Once the queue (Normal or priority) Reach the max length of patients , a new Queue will be created **(Increasing number of providers)** and appended to the existing Queues which means a new provider is available now in the Normal/Prioirty System
 - When service time comes:
   - Normal queues serve in the order of arrival.
   - Priority queues serve based on patient severity.
