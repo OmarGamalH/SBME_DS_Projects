@@ -81,5 +81,10 @@ It allows performance comparisons between the two systems under stochastic arriv
 - Service interval = every 20 seconds.
 
 ---
+## Images 
 
+![Image](https://github.com/user-attachments/assets/d6690cef-0a05-4152-bfc2-0df5f25dc2b5)
+![Image](https://github.com/user-attachments/assets/ed80cf4c-ea8e-40f0-b22f-590fa688a15c)
+![Image](https://github.com/user-attachments/assets/173de431-b7d4-4533-94bf-759661f00303)
 
+---
