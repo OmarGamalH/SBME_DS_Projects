@@ -87,6 +87,7 @@ It allows performance comparisons between the two systems under stochastic arriv
 - Average waiting time per patient category in both Normal and Priority queues.
 - Bar charts comparing service efficiency.
 - Console logs showing patient queueing and dequeuing at each interval.
+![Image](https://github.com/user-attachments/assets/fefe4b0a-bb0f-4575-b6fc-362c9439144c)
 ![Image](https://github.com/user-attachments/assets/173de431-b7d4-4533-94bf-759661f00303)
 ---
 
@@ -163,7 +164,4 @@ This makes it easy to track system performance, detect bottlenecks, and improve 
 - Arrival interval = every 10 seconds.
 - Service interval = every 20 seconds.
 
----
-
-![Image](https://github.com/user-attachments/assets/173de431-b7d4-4533-94bf-759661f00303)
 ---
