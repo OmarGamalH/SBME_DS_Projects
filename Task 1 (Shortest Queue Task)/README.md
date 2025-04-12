@@ -1,4 +1,4 @@
-# Hospital Queue Simulation System (Task 1)
+# Shortest Queue Problems (Task 1)
 This project simulates a hospital queuing system that manages patient arrival and service based on criticality. It models two systems:
 - **Normal Queue System** (FIFO - First-In, First-Out)
 - **Priority Queue System** (based on severity of condition)
