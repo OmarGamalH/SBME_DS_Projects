@@ -36,6 +36,43 @@ It allows performance comparisons between the two systems under stochastic arriv
 | Normal Person    | Normal            | 1                 |
 
 ---
+##  How It Works
+
+###  Time-Based Simulation
+- The simulation runs for a **fixed period of 300 seconds (5 minutes)**.
+- Every **10 seconds**, a new group of patients arrives.
+- Every **20 seconds**, patients are serviced and leave the system.
+
+###  Patient Generation
+- The number of patients is determined using **poisson distribution**
+- Each Queue has different of each type has it's own Random number of patient to mimic the real life world
+
+- Patients are randomly assigned one of four types:
+  - **Old Man**: Very Sick (priority level 3)
+  - **Sick Person**: Sick (priority level 2)
+  - **Pregnant Woman**: Very Very Sick (priority level 4)
+  - **Normal Person**: Normal (priority level 1)
+  
+- These patients are added to both:
+  - **Normal Queues** (FIFO) which will enqueue the patients without taking into count thier criticality.
+  - **Priority Queues** (inserted based on criticality) which will insert the patients based on their criticality level. 
+
+### Patient Processing
+- Each queue can hold up to **5 patients** before a new queue is created.
+- When service time comes:
+  - Normal queues serve in the order of arrival.
+  - Priority queues serve based on patient severity.
+- The number of People will be served depends on **Poisson Distribution** of each Queue of each type
+
+### Performance Tracking
+- Every serviced patient’s **arrival time**, **service time**, and **criticality** are recorded.
+- Data is saved into an **SQLite database** (`data.db`).
+- The simulation calculates and visualizes:
+  - **Average wait time** for each patient type.
+  - **Comparison between Normal vs Priority systems for Total average time and average time for each patient type**.
+ 
+
+--- 
 
 ## Output
 
