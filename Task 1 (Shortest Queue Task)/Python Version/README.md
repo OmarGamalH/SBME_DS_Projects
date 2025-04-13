@@ -148,7 +148,6 @@ Orange (Priority Queue)
 This gives a clear visual comparison of how each system handles different types of patients.
 
 
-![Image](https://github.com/user-attachments/assets/d6690cef-0a05-4152-bfc2-0df5f25dc2b5)
 ![Image](https://github.com/user-attachments/assets/ed80cf4c-ea8e-40f0-b22f-590fa688a15c)
 ## 2-A line chart is generated to visually: 
 represent the changes in average waiting time for both queues over time.
